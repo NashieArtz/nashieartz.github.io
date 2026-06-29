@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>My Astuce</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f2f2f4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="My Astuce">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --purple: #2e1a6b;
+    --purple-dark: #241355;
+    --magenta: #c2006d;
+    --magenta-dark: #a3005c;
+    --bg-grey: #f2f2f4;
+    --text-dark: #1c1c1e;
+    --text-grey: #6b6b70;
+    --pale-blue: #dceaf9;
+    --gold: #f7c948;
+    --gold-dark: #f0b429;
+    --white: #ffffff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{
+    margin:0;padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--white);
+    color:var(--text-dark);
+    overscroll-behavior:none;
+    height:100%;
+    width:100%;
+  }
+  #app{
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    max-width:480px;
+    margin:0 auto;
+    background:var(--white);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ===== Status bar (fake, for fidelity to screenshots) ===== */
+  .statusbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 18px 4px 18px;
+    font-size:15px;
+    font-weight:600;
+    background:var(--bg-grey);
+    flex-shrink:0;
+  }
+  .statusbar .right-icons{display:flex;align-items:center;gap:6px;}
+  .statusbar svg{display:block;}
+
+  /* ===== Header ===== */
+  .header{
+    background:var(--bg-grey);
+    padding:18px 20px 24px 20px;
+    position:relative;
+    flex-shrink:0;
+    border-radius:0 0 28px 28px;
+  }
+  .header-top{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .logo-icon{
+    width:54px;height:54px;
+    background:var(--purple);
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .logo-icon svg{width:34px;height:34px;}
+  .logo-text{display:flex;flex-direction:column;line-height:1;}
+  .logo-text .my-a{
+    font-size:30px;
+    font-weight:800;
+    color:var(--purple);
+    font-style:italic;
+    letter-spacing:-1px;
+  }
+  .logo-text .my-a span{color:var(--magenta);}
+  .logo-text .my-a u{text-decoration:none;border-bottom:1.5px solid var(--purple);padding-bottom:1px;}
+  .logo-text .sub{
+    font-size:20px;
+    font-weight:700;
+    color:var(--purple);
+    font-style:italic;
+    margin-top:1px;
+  }
+  .logo-text .sub .astuce{
+    color:var(--magenta);
+    font-family:'Brush Script MT', cursive;
+    font-style:normal;
+    font-weight:400;
+    font-size:24px;
+  }
+  .cart-icon{
+    position:absolute;
+    right:0;
+    top:0;
+  }
+
+  /* ===== Tabs ===== */
+  .tabs{
+    display:flex;
+    justify-content:space-around;
+    padding:18px 10px 0 10px;
+    background:var(--white);
+    flex-shrink:0;
+  }
+  .tab{
+    font-size:16px;
+    font-weight:700;
+    color:var(--text-grey);
+    padding-bottom:12px;
+    border-bottom:3px solid transparent;
+    cursor:pointer;
+    background:none;
+    border-top:none;border-left:none;border-right:none;
+    font-family:inherit;
+  }
+  .tab.active{
+    color:var(--magenta);
+    border-bottom-color:var(--magenta);
+  }
+
+  /* ===== Content area ===== */
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 20px 100px 20px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .placeholder-tab{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:60%;
+    text-align:center;
+    color:var(--text-grey);
+    gap:14px;
+  }
+  .placeholder-tab svg{opacity:0.35;}
+  .placeholder-tab p{font-size:15px;max-width:260px;margin:0;}
+
+  /* ===== Wallet: section header row ===== */
+  .section-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .section-icon{
+    width:50px;height:50px;
+    background:var(--purple);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .section-icon svg{width:24px;height:24px;}
+  .section-title{font-size:19px;font-weight:700;color:var(--text-dark);}
+
+  /* ===== Loyalty banner ===== */
+  .loyalty-banner{
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    border-radius:18px;
+    padding:16px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .loyalty-icon{
+    width:56px;height:56px;
+    background:var(--white);
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+    position:relative;
+  }
+  .loyalty-icon .pt-badge{
+    position:absolute;
+    top:-6px;left:-6px;
+    background:var(--white);
+    border-radius:10px;
+    font-size:9px;
+    font-weight:700;
+    padding:1px 4px;
+    color:var(--text-dark);
+    border:1px solid #ddd;
+  }
+  .loyalty-text{flex:1;}
+  .loyalty-text .title{font-weight:700;font-size:15px;color:var(--text-dark);margin-bottom:3px;}
+  .loyalty-text .desc{font-size:13px;color:#3a2e00;line-height:1.3;}
+  .loyalty-arrow{flex-shrink:0;color:var(--text-dark);}
+
+  /* ===== Ticket card ===== */
+  .ticket-card{
+    background:var(--white);
+    border:1.5px solid #e3e3e6;
+    border-radius:20px;
+    padding:22px 20px;
+    position:relative;
+    margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  }
+  .ticket-card.active{
+    border-color:var(--magenta);
+    box-shadow:0 2px 10px rgba(194,0,109,0.15);
+  }
+  .ticket-name{
+    font-size:18px;
+    font-weight:700;
+    color:var(--text-dark);
+    margin-bottom:18px;
+  }
+  .ticket-body{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .ticket-logo{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
+  }
+  .ticket-logo .reseau{font-size:9px;letter-spacing:1.5px;color:#888;font-weight:600;}
+  .ticket-logo .astuce-word{
+    font-family:'Brush Script MT', cursive;
+    font-size:30px;
+    color:var(--magenta);
+    margin-top:-2px;
+  }
+  .ticket-balance{
+    text-align:right;
+  }
+  .ticket-balance .label{font-size:12px;color:var(--text-grey);margin-bottom:6px;}
+  .balance-pill{
+    background:var(--purple);
+    color:var(--white);
+    border-radius:14px;
+    padding:6px 14px;
+    font-weight:700;
+    font-size:16px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .timer-pill{
+    position:absolute;
+    bottom:22px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#f2e7ee;
+    color:var(--magenta);
+    font-weight:700;
+    font-size:18px;
+    padding:8px 22px;
+    border-radius:20px;
+    letter-spacing:0.5px;
+    font-variant-numeric:tabular-nums;
+  }
+  .ticket-card.active .timer-pill{
+    background:#fdeaf4;
+    animation:pulse-pill 2s ease-in-out infinite;
+  }
+  @keyframes pulse-pill{
+    0%,100%{box-shadow:0 0 0 0 rgba(194,0,109,0.0);}
+    50%{box-shadow:0 0 0 4px rgba(194,0,109,0.08);}
+  }
+  .ticket-status-row{
+    display:flex;
+    justify-content:center;
+    margin-top:4px;
+  }
+  .validated-badge{
+    font-size:11px;
+    color:#1a8f4c;
+    font-weight:700;
+    background:#e6f7ed;
+    padding:3px 10px;
+    border-radius:10px;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+  }
+
+  /* ===== Buy tickets FAB ===== */
+  .buy-tickets-wrap{
+    position:absolute;
+    bottom:96px;
+    right:20px;
+    z-index:5;
+  }
+  .buy-tickets-btn{
+    background:var(--magenta);
+    color:var(--white);
+    border:none;
+    border-radius:26px;
+    padding:16px 28px;
+    font-size:16px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 4px 14px rgba(194,0,109,0.35);
+    cursor:pointer;
+    font-family:inherit;
+  }
+
+  /* ===== Bottom nav ===== */
+  .bottom-nav{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:10px 6px 6px 6px;
+    border-top:1px solid #ececec;
+    background:var(--white);
+    flex-shrink:0;
+  }
+  .nav-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    color:var(--text-dark);
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    background:none;border:none;
+    font-family:inherit;
+    padding:4px 2px;
+    position:relative;
+  }
+  .nav-item.active{color:var(--magenta);}
+  .nav-item svg{width:24px;height:24px;}
+  .nav-dot{
+    position:absolute;
+    top:-2px;right:8px;
+    width:8px;height:8px;
+    background:var(--magenta-dark);
+    border-radius:50%;
+  }
+
+  /* ===== Home screen nav buttons (gesture bar) ===== */
+  .gesture-bar{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:8px 0 10px 0;
+    background:var(--white);
+    flex-shrink:0;
+    color:#888;
+  }
+
+  ::-webkit-scrollbar{display:none;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Fake status bar -->
+  <div class="statusbar">
+    <span id="clock">19:59</span>
+    <div class="right-icons">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9v6h4l5 5V4L7 9H3z" stroke="black" stroke-width="1.5"/><path d="M16 8a4 4 0 010 8" stroke="black" stroke-width="1.5"/><line x1="2" y1="2" x2="22" y2="22" stroke="black" stroke-width="1.5"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 7c6-5 14-5 20 0" stroke="black" stroke-width="1.5" stroke-linecap="round"/><path d="M5 11c4-3 10-3 14 0" stroke="black" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17" r="1.5" fill="black"/></svg>
+      <svg width="16" height="14" viewBox="0 0 24 24" fill="black"><rect x="1" y="14" width="4" height="8"/><rect x="8" y="9" width="4" height="13"/><rect x="15" y="5" width="4" height="17"/><rect x="22" y="1" width="2" height="21" fill="#ddd"/></svg>
+      <svg width="22" height="14" viewBox="0 0 28 16" fill="none"><rect x="1" y="1" width="22" height="14" rx="3" stroke="black" stroke-width="1.3"/><rect x="3" y="3" width="13" height="10" rx="1.5" fill="black"/><rect x="25" y="6" width="2" height="4" rx="1" fill="black"/></svg>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="46" fill="white"/>
+            <rect x="6" y="33" width="88" height="10" fill="#2e1a6b"/>
+            <rect x="6" y="57" width="88" height="10" fill="#2e1a6b"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <div class="my-a"><u>my</u><span>A</span></div>
+          <div class="sub">my <span class="astuce-word" style="font-size:20px;">astuce</span></div>
+        </div>
+      </div>
+      <div class="cart-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.8"><circle cx="9" cy="20" r="1.2" fill="#333"/><circle cx="18" cy="20" r="1.2" fill="#333"/><path d="M2 3h2l2.4 12.2a2 2 0 002 1.6h8.6a2 2 0 002-1.6L21 7H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab" data-tab="ongoing">Ongoing</button>
+    <button class="tab active" data-tab="wallet">Wallet</button>
+    <button class="tab" data-tab="usage">Mobility usage</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Buy tickets FAB -->
+  <div class="buy-tickets-wrap" id="buyFab">
+    <button class="buy-tickets-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Buy tickets
+    </button>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10" stroke-linejoin="round"/></svg>
+      Home
+    </button>
+    <button class="nav-item" data-page="info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 21h20L12 2z" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none"/></svg>
+      Info
+      <span class="nav-dot"></span>
+    </button>
+    <button class="nav-item" data-page="favorites">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C0.5 7.5 3 4 6.5 4 9 4 11 6 12 7.5 13 6 15 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.3 12 21 12 21z" stroke-linejoin="round"/></svg>
+      Favorites
+    </button>
+    <button class="nav-item active" data-page="tickets">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 000 4v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 000-4V7z" stroke-linejoin="round"/></svg>
+      My tickets
+    </button>
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/><circle cx="18" cy="6" r="3.2" fill="white" stroke="currentColor"/><path d="M16.3 6.2l1 1 1.6-1.8" stroke="#1a8f4c"/></svg>
+      Account
+    </button>
+  </div>
+
+  <!-- Fake gesture bar -->
+  <div class="gesture-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+  </div>
+
+</div>
+
+<script>
+/* ===================== CLOCK (fake status bar) ===================== */
+function updateClock(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}`;
+}
+updateClock();
+setInterval(updateClock, 15000);
+
+/* ===================== TICKET TIMER LOGIC =====================
+   School-project "extra" feature: the active ticket counts down
+   from 00:59:00. Once it reaches 00:11:05, instead of expiring it
+   loops back up to 00:59:00, so the demo ticket "renews" itself
+   and never runs out during a presentation.
+================================================================ */
+const TICKET_START_SECONDS = 59*60;       // 00:59:00
+const TICKET_RESET_FLOOR   = 11*60 + 5;   // 00:11:05
+let ticketSeconds = TICKET_START_SECONDS;
+
+function formatTime(totalSeconds){
+  const h = Math.floor(totalSeconds/3600);
+  const m = Math.floor((totalSeconds%3600)/60);
+  const s = totalSeconds%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function tickTimer(){
+  ticketSeconds--;
+  if(ticketSeconds <= TICKET_RESET_FLOOR){
+    ticketSeconds = TICKET_START_SECONDS;
+  }
+  const el = document.getElementById('ticketTimer');
+  if(el) el.textContent = formatTime(ticketSeconds);
+}
+setInterval(tickTimer, 1000);
+
+/* ===================== TAB SWITCHING ===================== */
+const tabs = document.querySelectorAll('.tab');
+const content = document.getElementById('content');
+const buyFab = document.getElementById('buyFab');
+
+const ONGOING_HTML = `
+  <div class="section-row">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18" stroke="white"/><path d="M7 14h3" stroke="white"/></svg>
+    </div>
+    <div class="section-title">Public transport</div>
+  </div>
+
+  <div style="background:var(--pale-blue);border-radius:16px;padding:16px;display:flex;gap:12px;margin-bottom:18px;">
+    <div style="width:24px;height:24px;background:#1565c0;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;">i</div>
+    <p style="margin:0;font-size:14px;color:#1c1c1e;line-height:1.4;">Your mTicket tickets will appear here once they have been validated.</p>
+  </div>
+
+  <div style="background:white;border:1px solid #ececec;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+    <div style="font-weight:800;font-size:13px;color:#333;line-height:1;">P<span style="color:var(--magenta);">+</span>R</div>
+    <div style="flex:1;">
+      <div style="font-weight:700;font-size:16px;">Park-and-ride car park</div>
+      <div style="font-size:13px;color:var(--text-grey);">Present the QR code at the exit</div>
+    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  </div>
+`;
+
+const WALLET_HTML = `
+  <div style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+    <div class="loyalty-icon">
+      <span class="pt-badge">+10pt</span>
+      🎁
+    </div>
+    <div class="loyalty-text">
+      <div class="title">Subscribe to our loyalty program</div>
+      <div class="desc">Earn points by validating and redeeming them for gifts!</div>
+    </div>
+    <div class="loyalty-arrow">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+    </div>
+  </div>
+
+  <div class="section-row">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18" stroke="white"/><path d="M7 14h3" stroke="white"/></svg>
+    </div>
+    <div class="section-title">Public Transit</div>
+  </div>
+
+  <div class="ticket-card active">
+    <div class="ticket-name">Jeune 10 voyages Astuce</div>
+    <div class="ticket-body">
+      <div class="ticket-logo">
+        <span class="reseau">RÉSEAU</span>
+        <span class="astuce-word">astuce</span>
+      </div>
+      <div class="ticket-balance">
+        <div class="label">Balance</div>
+        <div class="balance-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M20.6 13.4L13 21l-9-9 7.6-7.6H20.6v8.6z" stroke-linejoin="round"/><circle cx="14.5" cy="9.5" r="1.3" fill="white" stroke="none"/></svg>
+          3
+        </div>
+      </div>
+    </div>
+    <div class="timer-pill" id="ticketTimer">00:59:00</div>
+    <div style="height:18px;"></div>
+    <div class="ticket-status-row">
+      <span class="validated-badge">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1a8f4c" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        Validated &middot; active
+      </span>
+    </div>
+  </div>
+`;
+
+const PLACEHOLDER_HTML = (label) => `
+  <div class="placeholder-tab">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 9h.01M15 9h.01M9.5 15a3.5 3.5 0 005 0" stroke-linecap="round"/></svg>
+    <p>${label} isn't part of this school-project demo. Only the My Wallet &rsaquo; Ongoing/Wallet screens are functional.</p>
+  </div>
+`;
+
+function renderTab(tabName){
+  if(tabName === 'ongoing'){
+    content.innerHTML = ONGOING_HTML;
+    buyFab.style.display = 'block';
+  } else if(tabName === 'wallet'){
+    content.innerHTML = WALLET_HTML;
+    buyFab.style.display = 'block';
+    document.getElementById('ticketTimer').textContent = formatTime(ticketSeconds);
+  } else {
+    content.innerHTML = PLACEHOLDER_HTML('Mobility usage');
+    buyFab.style.display = 'block';
+  }
+}
+
+tabs.forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTab(tab.dataset.tab);
+  });
+});
+
+/* ===================== BOTTOM NAV (My tickets is the only live page) ===================== */
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item=>{
+  item.addEventListener('click', ()=>{
+    navItems.forEach(n=>n.classList.remove('active'));
+    item.classList.add('active');
+    if(item.dataset.page !== 'tickets'){
+      content.innerHTML = PLACEHOLDER_HTML(item.querySelector('svg') ? item.textContent.trim() : 'This section');
+      buyFab.style.display = 'none';
+      document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+    } else {
+      document.querySelectorAll('.tabs .tab').forEach(t=>{
+        if(t.dataset.tab==='wallet') t.classList.add('active'); else t.classList.remove('active');
+      });
+      renderTab('wallet');
+    }
+  });
+});
+
+/* Initial render: Wallet tab active, matching screenshot 3 */
+renderTab('wallet');
+
+/* ===================== PWA SERVICE WORKER REGISTRATION ===================== */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
