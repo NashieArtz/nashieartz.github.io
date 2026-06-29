@@ -14,8 +14,8 @@
   :root{
     --purple: #2e1a6b;
     --purple-dark: #241355;
-    --magenta: #c2006d;
-    --magenta-dark: #a3005c;
+    --magenta: #B30058;
+    --magenta-dark: #9a004c;
     --bg-grey: #f2f2f4;
     --text-dark: #1c1c1e;
     --text-grey: #6b6b70;
@@ -44,20 +44,6 @@
     position:relative;
     overflow:hidden;
   }
-
-  /* ===== Status bar (fake, for fidelity to screenshots) ===== */
-  .statusbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:10px 18px 4px 18px;
-    font-size:15px;
-    font-weight:600;
-    background:var(--bg-grey);
-    flex-shrink:0;
-  }
-  .statusbar .right-icons{display:flex;align-items:center;gap:6px;}
-  .statusbar svg{display:block;}
 
   /* ===== Header ===== */
   .header{
@@ -112,6 +98,8 @@
     font-weight:400;
     font-size:24px;
   }
+
+  /* TODO: dark-gray cart-icon with reversed direction */
   .cart-icon{
     position:absolute;
     right:0;
@@ -126,6 +114,14 @@
     background:var(--white);
     flex-shrink:0;
   }
+
+  /* 
+  Three columns taking each 4 columns for 12 columns total of the screen.
+  Underline of tabs take entire 4 columns space.
+  Animation of underline smoothly sliding to the other tab with gray press animation
+  appearing when we press on another tab. The tab page content slides towards the
+  other tab page content.
+  */
   .tab{
     font-size:16px;
     font-weight:700;
@@ -308,7 +304,7 @@
   /* ===== Buy tickets FAB ===== */
   .buy-tickets-wrap{
     position:absolute;
-    bottom:96px;
+    bottom:70px;
     right:20px;
     z-index:5;
   }
@@ -323,7 +319,7 @@
     display:flex;
     align-items:center;
     gap:10px;
-    box-shadow:0 4px 14px rgba(194,0,109,0.35);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
     cursor:pointer;
     font-family:inherit;
   }
@@ -362,17 +358,6 @@
     border-radius:50%;
   }
 
-  /* ===== Home screen nav buttons (gesture bar) ===== */
-  .gesture-bar{
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    padding:8px 0 10px 0;
-    background:var(--white);
-    flex-shrink:0;
-    color:#888;
-  }
-
   ::-webkit-scrollbar{display:none;}
 </style>
 </head>
@@ -406,6 +391,7 @@
           <div class="sub">my <span class="astuce-word" style="font-size:20px;">astuce</span></div>
         </div>
       </div>
+      <!-- Replace cart icon here -->
       <div class="cart-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.8"><circle cx="9" cy="20" r="1.2" fill="#333"/><circle cx="18" cy="20" r="1.2" fill="#333"/><path d="M2 3h2l2.4 12.2a2 2 0 002 1.6h8.6a2 2 0 002-1.6L21 7H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -433,20 +419,24 @@
   </div>
 
   <!-- Bottom nav -->
+  <!-- Replace home icon here -->
   <div class="bottom-nav">
     <button class="nav-item" data-page="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10" stroke-linejoin="round"/></svg>
       Home
     </button>
+    <!-- Replace warning icon here -->
     <button class="nav-item" data-page="info">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 21h20L12 2z" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none"/></svg>
       Info
       <span class="nav-dot"></span>
     </button>
+    <!-- keep heart icon here -->
     <button class="nav-item" data-page="favorites">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.8-10-9.5C0.5 7.5 3 4 6.5 4 9 4 11 6 12 7.5 13 6 15 4 17.5 4 21 4 23.5 7.5 22 11.5 19.5 16.3 12 21 12 21z" stroke-linejoin="round"/></svg>
       Favorites
     </button>
+    <!-- Replace ticket icon here -->
     <button class="nav-item active" data-page="tickets">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 000 4v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 000-4V7z" stroke-linejoin="round"/></svg>
       My tickets
@@ -456,14 +446,6 @@
       Account
     </button>
   </div>
-
-  <!-- Fake gesture bar -->
-  <div class="gesture-bar">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-  </div>
-
 </div>
 
 <script>
@@ -509,6 +491,12 @@ const tabs = document.querySelectorAll('.tab');
 const content = document.getElementById('content');
 const buyFab = document.getElementById('buyFab');
 
+
+  /*
+
+  get timer here: <div class="timer-pill" id="ticketTimer">00:59:00</div>
+  remove blue part
+  */
 const ONGOING_HTML = `
   <div class="section-row">
     <div class="section-icon">
@@ -569,7 +557,6 @@ const WALLET_HTML = `
         </div>
       </div>
     </div>
-    <div class="timer-pill" id="ticketTimer">00:59:00</div>
     <div style="height:18px;"></div>
     <div class="ticket-status-row">
       <span class="validated-badge">
