@@ -255,15 +255,30 @@
   }
   .nav-item{
     display:flex;flex-direction:column;align-items:center;gap:4px;
-    color:var(--text-dark);font-size:11px;font-weight:600;
+    color:#8a8a8e;font-size:11px;font-weight:600;
     cursor:pointer;background:none;border:none;font-family:inherit;
     padding:4px 2px;position:relative;
   }
-  .nav-item.active{color:var(--magenta);}
-  .nav-item svg{width:26px;height:26px;}
-  .nav-dot{
-    position:absolute;top:-2px;right:8px;
-    width:8px;height:8px;background:var(--magenta-dark);border-radius:50%;
+  /* Active icon + label color */
+  .nav-item.active{color:#B10058;}
+  .nav-item .nav-icon-wrap{
+    position:relative;
+    display:flex;
+  }
+  .nav-item svg{width:26px;height:26px;display:block;}
+  /* Active-ticket badge on the My Tickets wallet icon */
+  .nav-ticket-badge{
+    position:absolute;
+    top:-5px;right:-7px;
+    width:16px;height:16px;
+    background:#312682;
+    color:#fff;
+    border-radius:50%;
+    font-size:10px;
+    font-weight:700;
+    line-height:16px;
+    text-align:center;
+    font-family:inherit;
   }
 
   ::-webkit-scrollbar{display:none;}
@@ -305,53 +320,58 @@
 
   <!-- Bottom nav -->
   <div class="bottom-nav">
-    <!-- HOME: custom house icon from user image 5 -->
+    <!-- HOME -->
     <button class="nav-item" data-page="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <!-- double-roof line (distinctive style in the uploaded icon) -->
-        <polyline points="2,9.5 12,2 22,9.5"/>
-        <polyline points="4,8 12,3.5 20,8"/>
-        <path d="M5 9v11a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1V9"/>
-      </svg>
+      <span class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.5 8.5L12 2l8.5 6.5"/>
+          <path d="M5.5 7.5L12 2.5l6.5 5"/>
+          <path d="M5.5 10v9.5a1.5 1.5 0 001.5 1.5h3.5v-4a1.5 1.5 0 013 0v4H17a1.5 1.5 0 001.5-1.5V10"/>
+        </svg>
+      </span>
       Home
     </button>
-    <!-- INFO: triangle warning icon from user image 4 -->
+    <!-- INFO -->
     <button class="nav-item" data-page="info">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3.5 20.5h17L12 3 3.5 20.5z"/>
-        <line x1="12" y1="10" x2="12" y2="14.5"/>
-        <circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/>
-      </svg>
+      <span class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a1.6 1.6 0 011.4.8l7 12.2a1.6 1.6 0 01-1.4 2.4H5a1.6 1.6 0 01-1.4-2.4l7-12.2A1.6 1.6 0 0112 3z"/>
+          <line x1="12" y1="9.3" x2="12" y2="14"/>
+          <circle cx="12" cy="16.7" r="0.4" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
       Info
-      <span class="nav-dot"></span>
     </button>
     <!-- FAVORITES -->
     <button class="nav-item" data-page="favorites">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 21C12 21 3 15 3 9a4.5 4.5 0 018-2.8A4.5 4.5 0 0121 9c0 6-9 12-9 12z"/>
-      </svg>
+      <span class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 6.3C10.9 4.9 9.2 4 7.5 4 4.9 4 3 6 3 8.6c0 4 4.2 6.9 9 11.4 4.8-4.5 9-7.4 9-11.4C21 6 19.1 4 16.5 4c-1.7 0-3.4.9-4.5 2.3z"/>
+        </svg>
+      </span>
       Favorites
     </button>
-    <!-- MY TICKETS: wallet icon from user image 3, in red when active -->
+    <!-- MY TICKETS: wallet icon + active-ticket badge -->
     <button class="nav-item active" data-page="tickets">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <!-- wallet body -->
-        <rect x="2" y="6" width="20" height="14" rx="3"/>
-        <!-- wallet flap / card at top left corner -->
-        <path d="M16 6V5a2 2 0 00-2-2H6a2 2 0 00-2 2v1"/>
-        <!-- coin slot -->
-        <circle cx="17.5" cy="13" r="1.5"/>
-      </svg>
+      <span class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 6.2L7.8 9H4.2A2.2 2.2 0 002 11.2v6.6A2.2 2.2 0 004.2 20h13.6a2.2 2.2 0 002.2-2.2V9.4a2.2 2.2 0 00-2.2-2.2H6.4"/>
+          <path d="M16.5 14.8a1.4 1.4 0 010-2.8h2.7a.8.8 0 01.8.8v1.2a.8.8 0 01-.8.8h-2.7z"/>
+        </svg>
+        <span class="nav-ticket-badge" id="ticketBadge">1</span>
+      </span>
       My tickets
     </button>
     <!-- ACCOUNT -->
     <button class="nav-item" data-page="account">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="8" r="4"/>
-        <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-        <circle cx="18" cy="6" r="3" fill="white" stroke="currentColor" stroke-width="1.5"/>
-        <polyline points="16.3,6 17.5,7.2 19.7,5" stroke="#1a8f4c" stroke-width="1.8"/>
-      </svg>
+      <span class="nav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
+          <circle cx="18" cy="6" r="3" fill="white" stroke="currentColor" stroke-width="1.5"/>
+          <polyline points="16.3,6 17.5,7.2 19.7,5" stroke="#1a8f4c" stroke-width="1.8"/>
+        </svg>
+      </span>
       Account
     </button>
   </div>
